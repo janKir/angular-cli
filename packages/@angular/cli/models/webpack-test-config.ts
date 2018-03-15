@@ -18,11 +18,19 @@ export class WebpackTestConfig extends NgCliWebpackConfig<WebpackTestOptions> {
   }
 
   public buildConfig() {
+    let customConfig = {};
+    try {
+      customConfig = require('../../../../webpack.config');
+    } catch (error) {
+      console.info('No custom webpack config specified.');
+    }
+
     const webpackConfigs = [
       getCommonConfig(this.wco),
       getStylesConfig(this.wco),
       getNonAotTestConfig(this.wco),
-      getTestConfig(this.wco)
+      getTestConfig(this.wco),
+      customConfig
     ];
 
     this.config = webpackMerge(webpackConfigs);

@@ -49,6 +49,13 @@ export class NgCliWebpackConfig<T extends BuildOptions = BuildOptions> {
   }
 
   public buildConfig() {
+    let customConfig = {};
+    try {
+      customConfig = require('../../../../webpack.config');
+    } catch (error) {
+      console.info('No custom webpack config specified.');
+    }
+
     const platformConfig = this.wco.appConfig.platform === 'server' ?
       getServerConfig(this.wco) : getBrowserConfig(this.wco);
 
@@ -56,6 +63,7 @@ export class NgCliWebpackConfig<T extends BuildOptions = BuildOptions> {
       getCommonConfig(this.wco),
       platformConfig,
       getStylesConfig(this.wco),
+      customConfig
     ];
 
     if (this.wco.appConfig.main || this.wco.appConfig.polyfills) {
